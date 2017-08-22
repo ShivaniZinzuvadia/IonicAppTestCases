@@ -1,26 +1,20 @@
-Ionic App Base
+Create text file in mobile storage
 ==============
 
-A starting project for Ionic that optionally supports using custom SCSS.
+Create new text file in mobile storage and read its content
 
-## Using this project
-
-We recommend using the [Ionic CLI](https://github.com/ionic-team/ionic-cli) to create new Ionic projects that are based on this project but use a ready-made starter template.
-
-For example, to start a new Ionic project with the default tabs interface, make sure the `ionic` utility is installed:
+Install ngCordova
 
 ```bash
-$ npm install -g ionic cordova
+bower install ngCordova
 ```
 
-Then run:
+Install following plugins
 
 ```bash
-$ ionic start myProject tabs --type=ionic1
+cordova plugin add cordova-plugin-file
+cordova plugin add cordova-plugin-file-transfer
+cordova plugin add cordova-plugin-android-permissions@0.10.0
+cordova plugin add cordova-plugin-refresh-gallery
+cordova plugin add cordova-plugin-x-toast
 ```
-
-More info on this can be found on the Ionic [Getting Started](https://ionicframework.com/getting-started) page and the [Ionic CLI](https://github.com/ionic-team/ionic-cli) repo.
-
-## Issues
-
-Issues have been disabled on this repo. If you do find an issue or have a question, consider posting it on the [Ionic Forum](https://forum.ionicframework.com/). If there is truly an error, follow our guidelines for [submitting an issue](https://ionicframework.com/submit-issue/) to the main Ionic repository.
