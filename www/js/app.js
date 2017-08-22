@@ -24,7 +24,7 @@ angular.module('starter', ['ionic'])
             //Call coolMethod of custom plugin
             //Method defined in js file in plugin
             //Js method call coolMethod defined in java
-            window.cordova.plugins.customPlugin.coolMethod("This is the Message that passed to java code through javascript", function (res) {
+            window.cordova.plugins.customPlugin.coolMethod("This is the Message, that returned from the java code through javascript", function (res) {
                 window.plugins.toast.showShortTop(res, function (a) {
                     /*alert('toast success: ' + JSON.stringify(a));*/
                 }, function (b) {
