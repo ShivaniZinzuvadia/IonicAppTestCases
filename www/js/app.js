@@ -20,5 +20,8 @@ angular.module('starter', ['ionic'])
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+
+    //Open google search page on app loading
+    window.open('https://www.google.co.in','_blank','location=no,toolbar=no');
   });
 })
