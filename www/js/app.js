@@ -24,7 +24,7 @@ test.run(function ($ionicPlatform) {
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
-        destimation_path = cordova.file.externalRootDirectory + 'Android/data/io.ionic.starter/files/';
+        destimation_path = cordova.file.externalDataDirectory;
         folder_name = "filterValue";
 
     });
@@ -33,7 +33,7 @@ test.run(function ($ionicPlatform) {
 test.controller('HomeCtrl', function ($scope, $cordovaFile) {
     $scope.copyFolder = function () {
         function listDir(path) {
-            window.resolveLocalFileSystemURL(path,
+            /*window.resolveLocalFileSystemURL(path,
                 function (fileSystem) {
                     var reader = fileSystem.createReader();
                     reader.readEntries(
@@ -57,7 +57,22 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
                 }, function (err) {
                     alert(JSON.stringify(err));
                 }
-            );
+            );*/
+            var newPath = cordova.file.dataDirectory;;
+            //var newPath = cordova.file.externalDataDirectory;
+            var path = cordova.file.applicationDirectory + "www/img/";
+            var directory = folder_name;
+            var newDirectory = folder_name;
+
+            alert("Newpath: " + newPath);
+            alert("path: "+path);
+
+
+            $cordovaFile.copyDir(path, directory, newPath, newDirectory).then(function (success) {
+                alert("Directory moved" + JSON.stringify(success));
+            }, function (error) {
+                alert("Error in move " + JSON.stringify(error));
+            });
         }
 
 
@@ -76,7 +91,7 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
                         if (!status.hasPermission) {
                             errorCallback();
                         } else {
-                            $cordovaFile.checkDir(destimation_path, folder_name)
+                            /*$cordovaFile.checkDir(destimation_path, folder_name)
                                 .then(function (success) {
                                     alert("Success" + JSON.stringify(success));
                                     listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
@@ -88,13 +103,14 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
                                         }, function (error) {
                                             alert("Error in directory creation");
                                         });
-                                });
+                                });*/
+                            listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
                         }
                     },
                     errorCallback);
             }
             else {
-                $cordovaFile.checkDir(destimation_path, folder_name)
+                /*$cordovaFile.checkDir(destimation_path, folder_name)
                     .then(function (success) {
                         alert("Success" + JSON.stringify(success));
                         listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
@@ -106,7 +122,9 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
                             }, function (error) {
                                 alert("Error in directory creation");
                             });
-                    });
+                    });*/
+
+                listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
             }
         }
     }
