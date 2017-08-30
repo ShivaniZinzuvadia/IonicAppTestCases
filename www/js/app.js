@@ -21,22 +21,28 @@ example.run(function ($ionicPlatform, $cordovaSQLite) {
             StatusBar.styleDefault();
         }
 
-        if (window.plugins.sqlDB) {
-            window.plugins.sqlDB.copy('plant_identification.sqlite', 0, copysuccess, copyerror);
-            function copysuccess() {
-                alert("Copy success");
-                db = $cordovaSQLite.openDB({name: 'plant_identification.sqlite', location: 'default'});
-                alert("Open DB done");
-            }
+        if (window.localStorage && !window.localStorage.getItem('firstRunFinished')) {
+            if (window.plugins.sqlDB) {
+                window.plugins.sqlDB.copy('plant_identification.sqlite', 0, copysuccess, copyerror);
+                function copysuccess() {
+                    alert("Copy success");
+                    db = $cordovaSQLite.openDB({name: 'plant_identification.sqlite', location: 'default'});
+                    alert("Open DB done");
+                }
 
-            function copyerror(error) {
-                alert("Copy error" + JSON.stringify(error));
-                db = $cordovaSQLite.openDB({name: 'plant_identification.sqlite', location: 'default'});
-                alert("Open DB done in error");
+                function copyerror(error) {
+                    alert("Copy error" + JSON.stringify(error));
+                    db = $cordovaSQLite.openDB({name: 'plant_identification.sqlite', location: 'default'});
+                    alert("Open DB done in error");
+                }
+                window.localStorage.setItem('firstRunFinished', true);
+            }
+            else {
+                alert("No SqlDB");
             }
         }
-        else {
-            alert("No SqlDB");
+        else{
+            db = $cordovaSQLite.openDB({name: 'plant_identification.sqlite', location: 'default'});
         }
     });
 })
