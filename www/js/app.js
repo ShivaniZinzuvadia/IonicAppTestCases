@@ -71,7 +71,6 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
         var checkDirectory = function(){
             $cordovaFile.checkDir(destimation_path, folder_name)
                 .then(function (success) {
-                    alert("Success" + JSON.stringify(success));
                     listDir(destimation_path + folder_name);
                 }, function (error) {
                     alert("No " + folder_name + " directory" + JSON.stringify(success));
@@ -82,7 +81,6 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
         permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, checkPermissionCallback, null);
 
         function checkPermissionCallback(status) {
-            alert(JSON.stringify(status));
             if (!status.hasPermission) {
                 var errorCallback = function () {
                     console.warn('Storage permission is not turned on');
@@ -94,7 +92,6 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
                             errorCallback();
                         } else {
                             if (window.localStorage && !window.localStorage.getItem('firstRunFinished'))  {
-                                alert("Inside localstorage");
                                 window.localStorage.setItem('firstRunFinished',true);
                                 copyDirectory().then(function () {
                                     checkDirectory();
@@ -106,7 +103,6 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
             }
             else {
                 if (window.localStorage && !window.localStorage.getItem('firstRunFinished')) {
-                    alert("Inside localstorage");
                     window.localStorage.setItem('firstRunFinished', true);
                     copyDirectory().then(function () {
                         checkDirectory();
