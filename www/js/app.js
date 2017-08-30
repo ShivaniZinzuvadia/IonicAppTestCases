@@ -24,16 +24,30 @@ test.run(function ($ionicPlatform) {
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
-        destimation_path = cordova.file.externalDataDirectory;
+        destimation_path = cordova.file.dataDirectory;
         folder_name = "filterValue";
-
     });
 })
 
 test.controller('HomeCtrl', function ($scope, $cordovaFile) {
     $scope.copyFolder = function () {
-        function listDir(path) {
-            /*window.resolveLocalFileSystemURL(path,
+        //Copy filterValue directory in mobile storage
+        function copyDirectory() {
+            var newPath = cordova.file.dataDirectory;
+            //var newPath = cordova.file.externalDataDirectory;
+            var path = cordova.file.applicationDirectory + "www/img/";
+            var directory = folder_name;
+            var newDirectory = folder_name;
+
+            $cordovaFile.copyDir(path, directory, newPath, newDirectory).then(function (success) {
+                alert("Directory copied" + JSON.stringify(success));
+            }, function (error) {
+                alert("Error in copy" + JSON.stringify(error));
+            });
+        }
+
+        var listDir = function (path) {
+            window.resolveLocalFileSystemURL(path,
                 function (fileSystem) {
                     var reader = fileSystem.createReader();
                     reader.readEntries(
@@ -41,40 +55,28 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
                             var destination = destimation_path + folder_name + "/";
                             var source = path + "/";
                             for (i = 0; i < entries.length; i++) {
-                                alert("source" + source + entries[i].name);
-                                alert("destination" + destination + entries[i].name);
-                                $cordovaFile.moveFile(source, entries[i].name, destination).then(function (success) {
-                                    alert("file moved" + JSON.stringify(success));
-                                }, function (error) {
-                                    alert("Error in move " + JSON.stringify(error));
-                                })
+                                alert(entries[i].name);
                             }
                         },
                         function (err) {
-                            alert(JSON.stringify(err));
+                            alert("Error in file reading from folder "+JSON.stringify(err));
                         }
                     );
                 }, function (err) {
                     alert(JSON.stringify(err));
                 }
-            );*/
-            var newPath = cordova.file.dataDirectory;;
-            //var newPath = cordova.file.externalDataDirectory;
-            var path = cordova.file.applicationDirectory + "www/img/";
-            var directory = folder_name;
-            var newDirectory = folder_name;
+            );
+        };
 
-            alert("Newpath: " + newPath);
-            alert("path: "+path);
-
-
-            $cordovaFile.copyDir(path, directory, newPath, newDirectory).then(function (success) {
-                alert("Directory moved" + JSON.stringify(success));
-            }, function (error) {
-                alert("Error in move " + JSON.stringify(error));
-            });
-        }
-
+        var checkDirectory = function(){
+            $cordovaFile.checkDir(destimation_path, folder_name)
+                .then(function (success) {
+                    alert("Success" + JSON.stringify(success));
+                    listDir(destimation_path + folder_name);
+                }, function (error) {
+                    alert("No " + folder_name + " directory" + JSON.stringify(success));
+                });
+        };
 
         var permissions = cordova.plugins.permissions;
         permissions.hasPermission(permissions.WRITE_EXTERNAL_STORAGE, checkPermissionCallback, null);
@@ -84,47 +86,35 @@ test.controller('HomeCtrl', function ($scope, $cordovaFile) {
             if (!status.hasPermission) {
                 var errorCallback = function () {
                     console.warn('Storage permission is not turned on');
-                }
+                };
                 permissions.requestPermission(
                     permissions.READ_EXTERNAL_STORAGE,
                     function (status) {
                         if (!status.hasPermission) {
                             errorCallback();
                         } else {
-                            /*$cordovaFile.checkDir(destimation_path, folder_name)
-                                .then(function (success) {
-                                    alert("Success" + JSON.stringify(success));
-                                    listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
-                                }, function (error) {
-                                    $cordovaFile.createDir(destimation_path, folder_name, false)
-                                        .then(function (success) {
-                                            alert("Directory created");
-                                            listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
-                                        }, function (error) {
-                                            alert("Error in directory creation");
-                                        });
-                                });*/
-                            listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
+                            if (window.localStorage && !window.localStorage.getItem('firstRunFinished'))  {
+                                alert("Inside localstorage");
+                                window.localStorage.setItem('firstRunFinished',true);
+                                copyDirectory().then(function () {
+                                    checkDirectory();
+                                });
+                            }
                         }
                     },
                     errorCallback);
             }
             else {
-                /*$cordovaFile.checkDir(destimation_path, folder_name)
-                    .then(function (success) {
-                        alert("Success" + JSON.stringify(success));
-                        listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
-                    }, function (error) {
-                        $cordovaFile.createDir(destimation_path, folder_name, false)
-                            .then(function (success) {
-                                alert("Directory created");
-                                listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
-                            }, function (error) {
-                                alert("Error in directory creation");
-                            });
-                    });*/
-
-                listDir(cordova.file.applicationDirectory + "www/img/" + folder_name);
+                if (window.localStorage && !window.localStorage.getItem('firstRunFinished')) {
+                    alert("Inside localstorage");
+                    window.localStorage.setItem('firstRunFinished', true);
+                    copyDirectory().then(function () {
+                        checkDirectory();
+                    });
+                }
+                else{
+                    checkDirectory();
+                }
             }
         }
     }
